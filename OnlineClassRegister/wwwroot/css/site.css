@@ -16,3 +16,16 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.block {
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: mediumpurple;
+    padding: 28px 28px;
+    font-size: 48px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
