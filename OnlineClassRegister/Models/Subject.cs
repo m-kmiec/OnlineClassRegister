@@ -2,10 +2,10 @@
 {
     public class Subject
     {
-        private int id { get; set; }
+        public int id { get; set; }
 
-        private string name { get; set; }  
+        public string name { get; set; }
 
-        private List<StudentClass> classes { get; set; }
+        public virtual ICollection<StudentClass> classes { get; set; }
     }
 }

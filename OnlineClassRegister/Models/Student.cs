@@ -2,11 +2,11 @@
 {
     public class Student
     {
-        private int id { get; set; }
-        private string name { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
 
-        private string surname { get; set; }
+        public string surname { get; set; }
 
-        private StudentClass studentClass;
+        public virtual StudentClass studentClass;
     }
 }

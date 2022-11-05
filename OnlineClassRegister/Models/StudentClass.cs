@@ -13,14 +13,14 @@
 
         public StudentClass() { }
 
-        private int id { get; set; }
+        public int id { get; set; }
 
-        private string name { get; set; }  
+        public string name { get; set; }
 
-        private List<Student> students { get; set; }
+        public virtual ICollection<Student> students { get; set; }
 
-        private Teacher classTutor { get; set; }
+        public virtual Teacher classTutor { get; set; }
 
-        private List<Subject>? subjects { get; set; }
+        public virtual ICollection<Subject>? subjects { get; set; }
     }
 }
