@@ -1,7 +1,10 @@
-﻿namespace OnlineClassRegister.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OnlineClassRegister.Models
 {
     public class Subject
     {
+        [Key]
         public int id { get; set; }
 
         public string name { get; set; }

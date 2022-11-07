@@ -261,12 +261,6 @@ namespace OnlineClassRegister.Migrations
             modelBuilder.Entity("OnlineClassRegister.Models.StudentClass", b =>
                 {
                     b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<int>("classTutorid")
                         .HasColumnType("int");
 
                     b.Property<string>("name")
@@ -274,8 +268,6 @@ namespace OnlineClassRegister.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
-
-                    b.HasIndex("classTutorid");
 
                     b.ToTable("StudentClass");
                 });
@@ -400,7 +392,7 @@ namespace OnlineClassRegister.Migrations
                 {
                     b.HasOne("OnlineClassRegister.Models.Teacher", "classTutor")
                         .WithMany()
-                        .HasForeignKey("classTutorid")
+                        .HasForeignKey("id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

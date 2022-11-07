@@ -9,10 +9,18 @@ namespace OnlineClassRegister.Areas.Identity.Data;
 
 public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
 {
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
+    public DbSet<OnlineClassRegister.Models.Subject> Subject { get; set; }
+
+    public DbSet<OnlineClassRegister.Models.Student> Student { get; set; }
+
+    public DbSet<OnlineClassRegister.Models.StudentClass> StudentClass { get; set; }
+
+    public DbSet<OnlineClassRegister.Models.Teacher> Teacher { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -23,14 +31,6 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
 
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }
-
-    public DbSet<OnlineClassRegister.Models.Subject> Subject { get; set; }
-
-    public DbSet<OnlineClassRegister.Models.Student> Student { get; set; }
-
-    public DbSet<OnlineClassRegister.Models.StudentClass> StudentClass { get; set; }
-
-    public DbSet<OnlineClassRegister.Models.Teacher> Teacher { get; set; }
 }
 
 public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<OnlineClassRegisterUser>

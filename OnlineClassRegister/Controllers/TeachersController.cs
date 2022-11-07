@@ -46,8 +46,6 @@ namespace OnlineClassRegister.Controllers
         // GET: Teachers/Create
         public IActionResult Create()
         {
-            List<Subject> subjects = _context.Subject.ToList();
-            ViewBag.Subject = subjects;
             return View();
         }
 

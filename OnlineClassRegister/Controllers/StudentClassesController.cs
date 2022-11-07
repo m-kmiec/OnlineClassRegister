@@ -14,6 +14,7 @@ namespace OnlineClassRegister.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        public List<Student> allStudents { get; set; }
         public StudentClassesController(ApplicationDbContext context)
         {
             _context = context;
@@ -22,7 +23,8 @@ namespace OnlineClassRegister.Controllers
         // GET: StudentClasses
         public async Task<IActionResult> Index()
         {
-              return View(await _context.StudentClass.ToListAsync());
+            var applicationDbContext = _context.StudentClass.Include(s => s.classTutor);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: StudentClasses/Details/5
@@ -34,6 +36,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var studentClass = await _context.StudentClass
+                .Include(s => s.classTutor)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (studentClass == null)
             {
@@ -46,6 +49,7 @@ namespace OnlineClassRegister.Controllers
         // GET: StudentClasses/Create
         public IActionResult Create()
         {
+            ViewData["id"] = new SelectList(_context.Teacher, "id", "id");
             return View();
         }
 
@@ -62,6 +66,7 @@ namespace OnlineClassRegister.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id"] = new SelectList(_context.Teacher, "id", "id", studentClass.id);
             return View(studentClass);
         }
 
@@ -78,6 +83,10 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
+            ViewData["id"] = new SelectList(_context.Teacher, "id", "id", studentClass.id);
+            ViewData["allStudents"] = allStudents;
+            allStudents = _context.Student.ToList();            
+
             return View(studentClass);
         }
 
@@ -113,6 +122,7 @@ namespace OnlineClassRegister.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id"] = new SelectList(_context.Teacher, "id", "id", studentClass.id);
             return View(studentClass);
         }
 
@@ -125,6 +135,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var studentClass = await _context.StudentClass
+                .Include(s => s.classTutor)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (studentClass == null)
             {
