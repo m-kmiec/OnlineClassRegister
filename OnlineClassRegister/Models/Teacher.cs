@@ -8,6 +8,6 @@
 
         public string surname { get; set; }
 
-        public virtual ICollection<Subject> subjects { get; set; }
+        public virtual ICollection<Subject>? subjects { get; set; }
     }
 }

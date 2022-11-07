@@ -6,6 +6,6 @@
 
         public string name { get; set; }
 
-        public virtual ICollection<StudentClass> classes { get; set; }
+        public virtual ICollection<StudentClass>? classes { get; set; }
     }
 }

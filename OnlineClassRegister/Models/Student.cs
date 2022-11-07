@@ -7,6 +7,6 @@
 
         public string surname { get; set; }
 
-        public virtual StudentClass studentClass;
+        public StudentClass studentClass;
     }
 }
