@@ -12,8 +12,8 @@ using OnlineClassRegister.Areas.Identity.Data;
 namespace OnlineClassRegister.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221107172851_CreatingTables")]
-    partial class CreatingTables
+    [Migration("20221107192234_creatingTables")]
+    partial class creatingTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

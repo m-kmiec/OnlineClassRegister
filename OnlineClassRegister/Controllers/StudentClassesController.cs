@@ -13,8 +13,6 @@ namespace OnlineClassRegister.Controllers
     public class StudentClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public List<Student> allStudents { get; set; }
         public StudentClassesController(ApplicationDbContext context)
         {
             _context = context;
@@ -83,9 +81,8 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
-            ViewData["id"] = new SelectList(_context.Teacher, "id", "id", studentClass.id);
-            ViewData["allStudents"] = allStudents;
-            allStudents = _context.Student.ToList();            
+
+            ViewBag.students = new MultiSelectList(_context.Student.ToList(), "id", "name", studentClass.students);
 
             return View(studentClass);
         }
@@ -95,7 +92,7 @@ namespace OnlineClassRegister.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name")] StudentClass studentClass)
+        public async Task<IActionResult> Edit(int id, [Bind("id,name,StudentIds")] StudentClass studentClass, string[] StudentIds)
         {
             if (id != studentClass.id)
             {
@@ -106,6 +103,12 @@ namespace OnlineClassRegister.Controllers
             {
                 try
                 {
+                    foreach (var studentId in StudentIds)
+                    {
+                        Student student = new Student();
+                        student.id = int.Parse(studentId);
+                        student.studentClass = studentClass;
+                    }
                     _context.Update(studentClass);
                     await _context.SaveChangesAsync();
                 }

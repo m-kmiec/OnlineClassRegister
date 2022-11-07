@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineClassRegister.Models
 {
@@ -10,7 +11,6 @@ namespace OnlineClassRegister.Models
         public string name { get; set; }
 
         public string surname { get; set; }
-
         public virtual ICollection<Subject>? subjects { get; set; }
 
     }
