@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OnlineClassRegister.Migrations
 {
-    public partial class creatingTables : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,9 +30,9 @@ namespace OnlineClassRegister.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -48,6 +48,19 @@ namespace OnlineClassRegister.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subject",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subject", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,22 +202,27 @@ namespace OnlineClassRegister.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Subject",
+                name: "SubjectTeacher",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Teacherid = table.Column<int>(type: "int", nullable: true)
+                    subjectsid = table.Column<int>(type: "int", nullable: false),
+                    teachersid = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subject", x => x.id);
+                    table.PrimaryKey("PK_SubjectTeacher", x => new { x.subjectsid, x.teachersid });
                     table.ForeignKey(
-                        name: "FK_Subject_Teacher_Teacherid",
-                        column: x => x.Teacherid,
+                        name: "FK_SubjectTeacher_Subject_subjectsid",
+                        column: x => x.subjectsid,
+                        principalTable: "Subject",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubjectTeacher_Teacher_teachersid",
+                        column: x => x.teachersid,
                         principalTable: "Teacher",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -301,9 +319,9 @@ namespace OnlineClassRegister.Migrations
                 column: "subjectsid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subject_Teacherid",
-                table: "Subject",
-                column: "Teacherid");
+                name: "IX_SubjectTeacher_teachersid",
+                table: "SubjectTeacher",
+                column: "teachersid");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -328,6 +346,9 @@ namespace OnlineClassRegister.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudentClassSubject");
+
+            migrationBuilder.DropTable(
+                name: "SubjectTeacher");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

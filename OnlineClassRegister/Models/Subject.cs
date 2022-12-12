@@ -7,17 +7,17 @@ namespace OnlineClassRegister.Models
     public class Subject
     {
         [Key]
-        public int Id { get; set; }
+        public int id { get; set; }
         [DisplayName("Name")]
-        public string Name { get; set; }
-        public virtual ICollection<StudentClass> Classes { get; set; }
+        public string name { get; set; }
+        public virtual ICollection<StudentClass> classes { get; set; }
 
-        public virtual ICollection<Teacher> Teachers { get; set; }
+        public virtual ICollection<Teacher> teachers { get; set; }
 
         public Subject()
         {
-            this.Classes = new HashSet<StudentClass>();
-            this.Teachers = new HashSet<Teacher>();
+            this.classes = new HashSet<StudentClass>();
+            this.teachers = new HashSet<Teacher>();
         }
     }
 }

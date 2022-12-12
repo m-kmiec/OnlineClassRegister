@@ -8,19 +8,19 @@ namespace OnlineClassRegister.Models
     {
 
         [Key]
-        public int Id { get; set; }
+        public int id { get; set; }
         [DisplayName("Name")]
-        public string Name { get; set; }
+        public string name { get; set; }
         [DisplayName("Class tutor")]
         [ForeignKey("id")]
-        public virtual Teacher? ClassTutor { get; set; }
-        public virtual ICollection<Student>? Students { get; set; }
-        public virtual ICollection<Subject>? Subjects { get; set; }
+        public virtual Teacher? classTutor { get; set; }
+        public virtual ICollection<Student>? students { get; set; }
+        public virtual ICollection<Subject>? subjects { get; set; }
 
         public StudentClass() 
         {
-            Students = new HashSet<Student>();
-            Subjects = new HashSet<Subject>();
+            students = new HashSet<Student>();
+            subjects = new HashSet<Subject>();
         }
     }
 }

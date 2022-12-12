@@ -34,7 +34,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var subject = await _context.Subject
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.id == id);
             if (subject == null)
             {
                 return NotFound();
@@ -88,7 +88,7 @@ namespace OnlineClassRegister.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,name")] Subject subject)
         {
-            if (id != subject.Id)
+            if (id != subject.id)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace OnlineClassRegister.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SubjectExists(subject.Id))
+                    if (!SubjectExists(subject.id))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var subject = await _context.Subject
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.id == id);
             if (subject == null)
             {
                 return NotFound();
@@ -155,7 +155,7 @@ namespace OnlineClassRegister.Controllers
 
         private bool SubjectExists(int id)
         {
-          return _context.Subject.Any(e => e.Id == id);
+          return _context.Subject.Any(e => e.id == id);
         }
     }
 }

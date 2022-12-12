@@ -14,7 +14,5 @@ public class OnlineClassRegisterUser : IdentityUser
 
     [PersonalData]
     public string? LastName { get; set; }
-
-    public string Email { get; set; }
 }
 

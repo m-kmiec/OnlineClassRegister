@@ -7,13 +7,13 @@ namespace OnlineClassRegister.Models
     public class Student
     {
         [Key]
-        public int Id { get; set; }
+        public int id { get; set; }
         [DisplayName("Name")]
-        public string Name { get; set; }
+        public string name { get; set; }
         [DisplayName("Surrname")]
-        public string Surname { get; set; }
+        public string surname { get; set; }
         [ForeignKey("id")]
 
-        public StudentClass StudentClass;
+        public StudentClass studentClass;
     }
 }

@@ -6,16 +6,16 @@ namespace OnlineClassRegister.Models
     public class Teacher
     {
         [Key]
-        public int Id { get; set; }
+        public int id { get; set; }
         [DisplayName("Name")]
-        public string Name { get; set; }
+        public string name { get; set; }
         [DisplayName("Surrname")]
-        public string Surname { get; set; }
-        public virtual ICollection<Subject> Subjects { get; set; }
+        public string surname { get; set; }
+        public virtual ICollection<Subject> subjects { get; set; }
 
         public Teacher()
         {
-            Subjects = new HashSet<Subject>();
+            subjects = new HashSet<Subject>();
         }
 
     }

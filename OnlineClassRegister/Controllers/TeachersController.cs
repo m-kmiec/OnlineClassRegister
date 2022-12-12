@@ -34,7 +34,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var teacher = await _context.Teacher
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.id == id);
             if (teacher == null)
             {
                 return NotFound();
@@ -88,7 +88,7 @@ namespace OnlineClassRegister.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,name,surname")] Teacher teacher)
         {
-            if (id != teacher.Id)
+            if (id != teacher.id)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace OnlineClassRegister.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TeacherExists(teacher.Id))
+                    if (!TeacherExists(teacher.id))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var teacher = await _context.Teacher
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.id == id);
             if (teacher == null)
             {
                 return NotFound();
@@ -155,7 +155,7 @@ namespace OnlineClassRegister.Controllers
 
         private bool TeacherExists(int id)
         {
-          return _context.Teacher.Any(e => e.Id == id);
+          return _context.Teacher.Any(e => e.id == id);
         }
     }
 }
