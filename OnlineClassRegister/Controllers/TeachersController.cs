@@ -22,7 +22,8 @@ namespace OnlineClassRegister.Controllers
         // GET: Teachers
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Teacher.ToListAsync());
+            var applicationDbContext = _context.Teacher.Include(t => t.classTutoring);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Teachers/Details/5
@@ -34,6 +35,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var teacher = await _context.Teacher
+                .Include(t => t.classTutoring)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (teacher == null)
             {
@@ -46,6 +48,7 @@ namespace OnlineClassRegister.Controllers
         // GET: Teachers/Create
         public IActionResult Create()
         {
+            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace OnlineClassRegister.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,surname")] Teacher teacher)
+        public async Task<IActionResult> Create([Bind("id,name,surname,classTutoringId")] Teacher teacher)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace OnlineClassRegister.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
             return View(teacher);
         }
 
@@ -78,6 +82,7 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
+            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
             return View(teacher);
         }
 
@@ -86,7 +91,7 @@ namespace OnlineClassRegister.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name,surname")] Teacher teacher)
+        public async Task<IActionResult> Edit(int id, [Bind("id,name,surname,classTutoringId")] Teacher teacher)
         {
             if (id != teacher.id)
             {
@@ -113,6 +118,7 @@ namespace OnlineClassRegister.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
             return View(teacher);
         }
 
@@ -125,6 +131,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var teacher = await _context.Teacher
+                .Include(t => t.classTutoring)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (teacher == null)
             {

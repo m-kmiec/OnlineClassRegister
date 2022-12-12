@@ -2,12 +2,11 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Edit</h1>
 
-<h4>Student class</h4>
+<h4>StudentClass</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,17 +17,6 @@
                 <label asp-for="name" class="control-label"></label>
                 <input asp-for="name" class="form-control" />
                 <span asp-validation-for="name" class="text-danger"></span>
-            </div>
-            <div class="form-group"> 
-                @Html.LabelFor(model => model.students)
-                <div class="checkbox">
-                    <ul>
-                        @foreach (var item in (MultiSelectList)ViewBag.students)
-                        {
-                            <li><input type="checkbox" value="@item.Value" id="StudentIds" name="StudentIds">@item.Text</li>
-                        }
-                    </ul>
-                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

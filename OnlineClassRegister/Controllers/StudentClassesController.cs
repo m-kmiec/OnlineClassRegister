@@ -13,6 +13,7 @@ namespace OnlineClassRegister.Controllers
     public class StudentClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
+
         public StudentClassesController(ApplicationDbContext context)
         {
             _context = context;
@@ -21,8 +22,7 @@ namespace OnlineClassRegister.Controllers
         // GET: StudentClasses
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.StudentClass.Include(s => s.classTutor);
-            return View(await applicationDbContext.ToListAsync());
+              return View(await _context.StudentClass.ToListAsync());
         }
 
         // GET: StudentClasses/Details/5
@@ -34,7 +34,6 @@ namespace OnlineClassRegister.Controllers
             }
 
             var studentClass = await _context.StudentClass
-                .Include(s => s.classTutor)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (studentClass == null)
             {
@@ -47,7 +46,6 @@ namespace OnlineClassRegister.Controllers
         // GET: StudentClasses/Create
         public IActionResult Create()
         {
-            ViewData["id"] = new SelectList(_context.Teacher, "id", "id");
             return View();
         }
 
@@ -64,7 +62,6 @@ namespace OnlineClassRegister.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["id"] = new SelectList(_context.Teacher, "id", "id", studentClass.id);
             return View(studentClass);
         }
 
@@ -81,9 +78,6 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
-
-            ViewBag.students = new MultiSelectList(_context.Student.ToList(), "id", "name", studentClass.students);
-
             return View(studentClass);
         }
 
@@ -92,7 +86,7 @@ namespace OnlineClassRegister.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name,StudentIds")] StudentClass studentClass, string[] StudentIds)
+        public async Task<IActionResult> Edit(int id, [Bind("id,name")] StudentClass studentClass)
         {
             if (id != studentClass.id)
             {
@@ -103,12 +97,6 @@ namespace OnlineClassRegister.Controllers
             {
                 try
                 {
-                    foreach (var studentId in StudentIds)
-                    {
-                        Student student = new Student();
-                        student.id = int.Parse(studentId);
-                        student.studentClass = studentClass;
-                    }
                     _context.Update(studentClass);
                     await _context.SaveChangesAsync();
                 }
@@ -125,7 +113,6 @@ namespace OnlineClassRegister.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["id"] = new SelectList(_context.Teacher, "id", "id", studentClass.id);
             return View(studentClass);
         }
 
@@ -138,7 +125,6 @@ namespace OnlineClassRegister.Controllers
             }
 
             var studentClass = await _context.StudentClass
-                .Include(s => s.classTutor)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (studentClass == null)
             {

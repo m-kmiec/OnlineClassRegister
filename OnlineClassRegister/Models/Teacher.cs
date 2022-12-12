@@ -13,6 +13,9 @@ namespace OnlineClassRegister.Models
         public string surname { get; set; }
         public virtual ICollection<Subject> subjects { get; set; }
 
+        public int classTutoringId { get; set; }
+
+        public virtual StudentClass classTutoring { get; set; }
         public Teacher()
         {
             subjects = new HashSet<Subject>();

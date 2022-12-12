@@ -172,7 +172,6 @@ namespace OnlineClassRegister.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -233,6 +232,34 @@ namespace OnlineClassRegister.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("OnlineClassRegister.Models.Grade", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Studentid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Subjectid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherGradingid")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Studentid");
+
+                    b.HasIndex("Subjectid");
+
+                    b.HasIndex("TeacherGradingid");
+
+                    b.ToTable("Grade");
+                });
+
             modelBuilder.Entity("OnlineClassRegister.Models.Student", b =>
                 {
                     b.Property<int>("id")
@@ -241,12 +268,12 @@ namespace OnlineClassRegister.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
-                    b.Property<int?>("StudentClassid")
-                        .HasColumnType("int");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("studentClassid")
+                        .HasColumnType("int");
 
                     b.Property<string>("surname")
                         .IsRequired()
@@ -254,7 +281,7 @@ namespace OnlineClassRegister.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("StudentClassid");
+                    b.HasIndex("studentClassid");
 
                     b.ToTable("Student");
                 });
@@ -262,7 +289,10 @@ namespace OnlineClassRegister.Migrations
             modelBuilder.Entity("OnlineClassRegister.Models.StudentClass", b =>
                 {
                     b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -298,6 +328,9 @@ namespace OnlineClassRegister.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
+                    b.Property<int>("classTutoringId")
+                        .HasColumnType("int");
+
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -307,6 +340,9 @@ namespace OnlineClassRegister.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("classTutoringId")
+                        .IsUnique();
 
                     b.ToTable("Teacher");
                 });
@@ -323,7 +359,7 @@ namespace OnlineClassRegister.Migrations
 
                     b.HasIndex("subjectsid");
 
-                    b.ToTable("StudentClassSubject");
+                    b.ToTable("ClassSubject", (string)null);
                 });
 
             modelBuilder.Entity("SubjectTeacher", b =>
@@ -338,7 +374,7 @@ namespace OnlineClassRegister.Migrations
 
                     b.HasIndex("teachersid");
 
-                    b.ToTable("SubjectTeacher");
+                    b.ToTable("SubjectTeacher", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -392,22 +428,51 @@ namespace OnlineClassRegister.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OnlineClassRegister.Models.Student", b =>
+            modelBuilder.Entity("OnlineClassRegister.Models.Grade", b =>
                 {
-                    b.HasOne("OnlineClassRegister.Models.StudentClass", null)
-                        .WithMany("students")
-                        .HasForeignKey("StudentClassid");
-                });
-
-            modelBuilder.Entity("OnlineClassRegister.Models.StudentClass", b =>
-                {
-                    b.HasOne("OnlineClassRegister.Models.Teacher", "classTutor")
+                    b.HasOne("OnlineClassRegister.Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("id")
+                        .HasForeignKey("Studentid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("classTutor");
+                    b.HasOne("OnlineClassRegister.Models.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("Subjectid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OnlineClassRegister.Models.Teacher", "TeacherGrading")
+                        .WithMany()
+                        .HasForeignKey("TeacherGradingid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("TeacherGrading");
+                });
+
+            modelBuilder.Entity("OnlineClassRegister.Models.Student", b =>
+                {
+                    b.HasOne("OnlineClassRegister.Models.StudentClass", "studentClass")
+                        .WithMany("students")
+                        .HasForeignKey("studentClassid");
+
+                    b.Navigation("studentClass");
+                });
+
+            modelBuilder.Entity("OnlineClassRegister.Models.Teacher", b =>
+                {
+                    b.HasOne("OnlineClassRegister.Models.StudentClass", "classTutoring")
+                        .WithOne("classTutor")
+                        .HasForeignKey("OnlineClassRegister.Models.Teacher", "classTutoringId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("classTutoring");
                 });
 
             modelBuilder.Entity("StudentClassSubject", b =>
@@ -442,6 +507,8 @@ namespace OnlineClassRegister.Migrations
 
             modelBuilder.Entity("OnlineClassRegister.Models.StudentClass", b =>
                 {
+                    b.Navigation("classTutor");
+
                     b.Navigation("students");
                 });
 #pragma warning restore 612, 618

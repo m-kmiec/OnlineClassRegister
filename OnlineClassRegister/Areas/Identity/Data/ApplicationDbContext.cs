@@ -14,13 +14,15 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
         : base(options)
     {
     }
-    public DbSet<OnlineClassRegister.Models.Subject> Subject { get; set; }
+    public DbSet<Subject> Subject { get; set; }
 
-    public DbSet<OnlineClassRegister.Models.Student> Student { get; set; }
+    public DbSet<Student> Student { get; set; }
 
-    public DbSet<OnlineClassRegister.Models.StudentClass> StudentClass { get; set; }
+    public DbSet<StudentClass> StudentClass { get; set; }
 
-    public DbSet<OnlineClassRegister.Models.Teacher> Teacher { get; set; }
+    public DbSet<Teacher> Teacher { get; set; }
+
+    public DbSet<Grade> Grade { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -30,7 +32,28 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
         // Add your customizations after calling base.OnModelCreating(builder);
         builder.Entity<Subject>()
             .HasMany<Teacher>(s => s.teachers)
-            .WithMany(t => t.subjects);
+            .WithMany(t => t.subjects)
+            .UsingEntity(j => j.ToTable("SubjectTeacher"));
+
+        builder.Entity<Teacher>()
+            .HasMany<Subject>(t => t.subjects)
+            .WithMany(s => s.teachers)
+            .UsingEntity(j => j.ToTable("SubjectTeacher"));
+
+        builder.Entity<Student>()
+            .HasOne(s => s.studentClass)
+            .WithMany(sc => sc.students);
+
+        builder.Entity<StudentClass>()
+            .HasMany<Subject>(t => t.subjects)
+            .WithMany(s => s.classes)
+            .UsingEntity(j => j.ToTable("ClassSubject"));
+
+        builder.Entity<StudentClass>()
+            .HasOne(sc => sc.classTutor)
+            .WithOne(t => t.classTutoring)
+            .HasForeignKey<Teacher>(t => t.classTutoringId);
+
 
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }

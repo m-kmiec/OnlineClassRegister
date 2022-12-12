@@ -12,8 +12,8 @@ namespace OnlineClassRegister.Models
         [DisplayName("Name")]
         public string name { get; set; }
         [DisplayName("Class tutor")]
-        [ForeignKey("id")]
         public virtual Teacher? classTutor { get; set; }
+
         public virtual ICollection<Student>? students { get; set; }
         public virtual ICollection<Subject>? subjects { get; set; }
 
