@@ -28,6 +28,9 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
         // Customize the ASP.NET Identity model and override the defaults if needed.
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
+        builder.Entity<Subject>()
+            .HasMany<Teacher>(s => s.teachers)
+            .WithMany(t => t.subjects);
 
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }

@@ -17,6 +17,10 @@ namespace OnlineClassRegister.Models
         public virtual ICollection<Student>? students { get; set; }
         public virtual ICollection<Subject>? subjects { get; set; }
 
-        public StudentClass() { }
+        public StudentClass() 
+        {
+            students = new HashSet<Student>();
+            subjects = new HashSet<Subject>();
+        }
     }
 }
