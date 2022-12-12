@@ -7,9 +7,9 @@ namespace OnlineClassRegister.Models
     public class Subject
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         [DisplayName("Name")]
-        public string name { get; set; }
-        public virtual ICollection<StudentClass>? classes { get; set; }
+        public string Name { get; set; }
+        public virtual ICollection<StudentClass>? Classes { get; set; }
     }
 }

@@ -9,8 +9,12 @@ namespace OnlineClassRegister.Areas.Identity.Data;
 // Add profile data for application users by adding properties to the OnlineClassRegisterUser class
 public class OnlineClassRegisterUser : IdentityUser
 {
-    public string FirstName { get; set; }
+    [PersonalData]
+    public string? FirstName { get; set; }
 
-    public string LastName { get; set; }
+    [PersonalData]
+    public string? LastName { get; set; }
+
+    public string Email { get; set; }
 }
 

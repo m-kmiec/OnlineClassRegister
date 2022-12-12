@@ -38,6 +38,6 @@ public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<Onlin
     public void Configure(EntityTypeBuilder<OnlineClassRegisterUser> builder)
     {
         builder.Property(u => u.FirstName).IsRequired();
-        builder.Property(u => u.FirstName).IsRequired();
+        builder.Property(u => u.LastName).IsRequired();
     }
 }
