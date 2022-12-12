@@ -29,8 +29,8 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
         builder.Entity<Subject>()
-            .HasMany<Teacher>(s => s.teachers)
-            .WithMany(t => t.subjects);
+            .HasMany<Teacher>(s => s.Teachers)
+            .WithMany(t => t.Subjects);
 
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }

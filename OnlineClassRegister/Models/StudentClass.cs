@@ -19,8 +19,8 @@ namespace OnlineClassRegister.Models
 
         public StudentClass() 
         {
-            students = new HashSet<Student>();
-            subjects = new HashSet<Subject>();
+            Students = new HashSet<Student>();
+            Subjects = new HashSet<Subject>();
         }
     }
 }
