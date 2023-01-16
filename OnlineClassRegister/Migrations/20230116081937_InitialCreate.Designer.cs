@@ -12,8 +12,8 @@ using OnlineClassRegister.Areas.Identity.Data;
 namespace OnlineClassRegister.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221212204559_initial")]
-    partial class initial
+    [Migration("20230116081937_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -259,7 +259,7 @@ namespace OnlineClassRegister.Migrations
 
                     b.HasIndex("TeacherGradingid");
 
-                    b.ToTable("Grade");
+                    b.ToTable("Grade", (string)null);
                 });
 
             modelBuilder.Entity("OnlineClassRegister.Models.Student", b =>
@@ -285,7 +285,7 @@ namespace OnlineClassRegister.Migrations
 
                     b.HasIndex("studentClassid");
 
-                    b.ToTable("Student");
+                    b.ToTable("Student", (string)null);
                 });
 
             modelBuilder.Entity("OnlineClassRegister.Models.StudentClass", b =>
@@ -302,7 +302,7 @@ namespace OnlineClassRegister.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("StudentClass");
+                    b.ToTable("StudentClass", (string)null);
                 });
 
             modelBuilder.Entity("OnlineClassRegister.Models.Subject", b =>
@@ -319,7 +319,7 @@ namespace OnlineClassRegister.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Subject");
+                    b.ToTable("Subject", (string)null);
                 });
 
             modelBuilder.Entity("OnlineClassRegister.Models.Teacher", b =>
@@ -346,7 +346,7 @@ namespace OnlineClassRegister.Migrations
                     b.HasIndex("classTutoringId")
                         .IsUnique();
 
-                    b.ToTable("Teacher");
+                    b.ToTable("Teacher", (string)null);
                 });
 
             modelBuilder.Entity("StudentClassSubject", b =>

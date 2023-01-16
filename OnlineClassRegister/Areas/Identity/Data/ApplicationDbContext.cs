@@ -27,9 +27,13 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        // Customize the ASP.NET Identity model and override the defaults if needed.
-        // For example, you can rename the ASP.NET Identity table names and more.
-        // Add your customizations after calling base.OnModelCreating(builder);
+        
+        builder.Entity<Student>().ToTable("Student");
+        builder.Entity<Grade>().ToTable("Grade");
+        builder.Entity<StudentClass>().ToTable("StudentClass");
+        builder.Entity<Subject>().ToTable("Subject");
+        builder.Entity<Teacher>().ToTable("Teacher");
+
         builder.Entity<Subject>()
             .HasMany<Teacher>(s => s.teachers)
             .WithMany(t => t.subjects)

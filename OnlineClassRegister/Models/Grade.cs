@@ -1,7 +1,10 @@
-﻿namespace OnlineClassRegister.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OnlineClassRegister.Models
 {
     public class Grade
     {
+        [Key]
         public int Id { get; set; }
         public virtual Teacher TeacherGrading { get; set; }
 
