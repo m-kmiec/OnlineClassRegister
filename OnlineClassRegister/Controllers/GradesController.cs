@@ -10,90 +10,85 @@ using OnlineClassRegister.Models;
 
 namespace OnlineClassRegister.Controllers
 {
-    public class TeachersController : Controller
+    public class GradesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public TeachersController(ApplicationDbContext context)
+        public GradesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Teachers
+        // GET: Grades
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Teacher.Include(t => t.classTutoring);
-            return View(await applicationDbContext.ToListAsync());
+              return View(await _context.Grade.ToListAsync());
         }
 
-        // GET: Teachers/Details/5
+        // GET: Grades/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Teacher == null)
+            if (id == null || _context.Grade == null)
             {
                 return NotFound();
             }
 
-            var teacher = await _context.Teacher
-                .Include(t => t.classTutoring)
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (teacher == null)
+            var grade = await _context.Grade
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (grade == null)
             {
                 return NotFound();
             }
 
-            return View(teacher);
+            return View(grade);
         }
 
-        // GET: Teachers/Create
+        // GET: Grades/Create
         public IActionResult Create()
         {
-            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "name");
             return View();
         }
 
-        // POST: Teachers/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,surname,classTutoringId")] Teacher teacher)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(teacher);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
-            return View(teacher);
-        }
-
-        // GET: Teachers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Teacher == null)
-            {
-                return NotFound();
-            }
-
-            var teacher = await _context.Teacher.FindAsync(id);
-            if (teacher == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
-            return View(teacher);
-        }
-
-        // POST: Teachers/Edit/5
+        // POST: Grades/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name,surname,classTutoringId")] Teacher teacher)
+        public async Task<IActionResult> Create([Bind("Id")] Grade grade)
         {
-            if (id != teacher.id)
+            if (ModelState.IsValid)
+            {
+                _context.Add(grade);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(grade);
+        }
+
+        // GET: Grades/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Grade == null)
+            {
+                return NotFound();
+            }
+
+            var grade = await _context.Grade.FindAsync(id);
+            if (grade == null)
+            {
+                return NotFound();
+            }
+            return View(grade);
+        }
+
+        // POST: Grades/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id")] Grade grade)
+        {
+            if (id != grade.Id)
             {
                 return NotFound();
             }
@@ -102,12 +97,12 @@ namespace OnlineClassRegister.Controllers
             {
                 try
                 {
-                    _context.Update(teacher);
+                    _context.Update(grade);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TeacherExists(teacher.id))
+                    if (!GradeExists(grade.Id))
                     {
                         return NotFound();
                     }
@@ -116,56 +111,51 @@ namespace OnlineClassRegister.Controllers
                         throw;
                     }
                 }
-
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
-            return View(teacher);
+            return View(grade);
         }
 
-        // GET: Teachers/Delete/5
+        // GET: Grades/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Teacher == null)
+            if (id == null || _context.Grade == null)
             {
                 return NotFound();
             }
 
-            var teacher = await _context.Teacher
-                .Include(t => t.classTutoring)
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (teacher == null)
+            var grade = await _context.Grade
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (grade == null)
             {
                 return NotFound();
             }
 
-            return View(teacher);
+            return View(grade);
         }
 
-        // POST: Teachers/Delete/5
+        // POST: Grades/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Teacher == null)
+            if (_context.Grade == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Teacher'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Grade'  is null.");
             }
-
-            var teacher = await _context.Teacher.FindAsync(id);
-            if (teacher != null)
+            var grade = await _context.Grade.FindAsync(id);
+            if (grade != null)
             {
-                _context.Teacher.Remove(teacher);
+                _context.Grade.Remove(grade);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TeacherExists(int id)
+        private bool GradeExists(int id)
         {
-            return _context.Teacher.Any(e => e.id == id);
+          return _context.Grade.Any(e => e.Id == id);
         }
     }
 }

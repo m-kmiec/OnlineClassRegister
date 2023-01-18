@@ -11,15 +11,14 @@ namespace OnlineClassRegister.Models
         public string name { get; set; }
         [DisplayName("Surrname")]
         public string surname { get; set; }
-        public virtual ICollection<Subject> subjects { get; set; }
-
-        public int classTutoringId { get; set; }
-
-        public virtual StudentClass classTutoring { get; set; }
+        public virtual ICollection<Subject>? subjects { get; set; }
+        [DisplayName("Student Class")]
+        public int? classTutoringId { get; set; }
+        [DisplayName("Class Tutoring")]
+        public virtual StudentClass? classTutoring { get; set; }
         public Teacher()
         {
             subjects = new HashSet<Subject>();
         }
-
     }
 }
