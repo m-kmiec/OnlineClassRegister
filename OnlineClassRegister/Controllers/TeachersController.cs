@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace OnlineClassRegister.Controllers
             _context = context;
         }
 
+        [Authorize(Policy = "RequireTeacher")]
         // GET: Teachers
         public async Task<IActionResult> Index()
         {
@@ -48,13 +50,11 @@ namespace OnlineClassRegister.Controllers
         // GET: Teachers/Create
         public IActionResult Create()
         {
-            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id");
+            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "name");
             return View();
         }
 
         // POST: Teachers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,name,surname,classTutoringId")] Teacher teacher)
@@ -65,7 +65,7 @@ namespace OnlineClassRegister.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
+
             return View(teacher);
         }
 
@@ -82,6 +82,7 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
+
             ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
             return View(teacher);
         }
@@ -116,8 +117,10 @@ namespace OnlineClassRegister.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
             return View(teacher);
         }
@@ -150,19 +153,20 @@ namespace OnlineClassRegister.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Teacher'  is null.");
             }
+
             var teacher = await _context.Teacher.FindAsync(id);
             if (teacher != null)
             {
                 _context.Teacher.Remove(teacher);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TeacherExists(int id)
         {
-          return _context.Teacher.Any(e => e.id == id);
+            return _context.Teacher.Any(e => e.id == id);
         }
     }
 }
