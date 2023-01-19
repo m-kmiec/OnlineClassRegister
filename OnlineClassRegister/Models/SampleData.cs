@@ -13,7 +13,7 @@ namespace OnlineClassRegister.Models
             var context =
                 new ApplicationDbContext(serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
 
-            string[] roles = { "Administrator", "Teacher", "Parent", "Student", "User" }; // available roles
+            string[] roles = { "Administrator", "Teacher", "Parent", "Student" }; // available roles
 
 
             foreach (string role in roles)

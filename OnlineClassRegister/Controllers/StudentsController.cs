@@ -22,7 +22,7 @@ namespace OnlineClassRegister.Controllers
         // GET: Students
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Student.ToListAsync());
+            return View(await _context.Student.ToListAsync());
         }
 
         // GET: Students/Details/5
@@ -80,6 +80,7 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
+
             return View(student);
         }
 
@@ -113,8 +114,10 @@ namespace OnlineClassRegister.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(student);
         }
 
@@ -145,19 +148,20 @@ namespace OnlineClassRegister.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Student'  is null.");
             }
+
             var student = await _context.Student.FindAsync(id);
             if (student != null)
             {
                 _context.Student.Remove(student);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool StudentExists(int id)
         {
-          return _context.Student.Any(e => e.id == id);
+            return _context.Student.Any(e => e.id == id);
         }
     }
 }
