@@ -98,6 +98,8 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
+            ViewData["classes"] = new SelectList(_context.StudentClass, "id", "name");
+            ViewData["teachers"] = new SelectList(_context.Teacher, "id", "surname");
             return View(subject);
         }
 
@@ -133,6 +135,8 @@ namespace OnlineClassRegister.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["classes"] = new SelectList(_context.StudentClass, "id", "name");
+            ViewData["teachers"] = new SelectList(_context.Teacher, "id", "surname");
             return View(subject);
         }
 
