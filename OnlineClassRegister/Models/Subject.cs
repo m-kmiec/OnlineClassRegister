@@ -10,14 +10,10 @@ namespace OnlineClassRegister.Models
         public int id { get; set; }
         [DisplayName("Name")]
         public string name { get; set; }
-        public virtual ICollection<StudentClass> classes { get; set; }
+        [Display(Name = "Classes")]
+        public virtual ICollection<StudentClass>? classes { get; set; }
+        [Display(Name = "Teachers")]
+        public virtual ICollection<Teacher>? teachers { get; set; }
 
-        public virtual ICollection<Teacher> teachers { get; set; }
-
-        public Subject()
-        {
-            this.classes = new HashSet<StudentClass>();
-            this.teachers = new HashSet<Teacher>();
-        }
     }
 }

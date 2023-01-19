@@ -18,6 +18,14 @@
                 <span asp-validation-for="name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label class="control-label">Classes</label>
+                <select name="cIds" class="form-control" asp-items="ViewBag.classes" multiple></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Teachers</label>
+                <select name="tIds" class="form-control" asp-items="ViewBag.teachers" multiple></select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

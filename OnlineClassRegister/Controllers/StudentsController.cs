@@ -22,7 +22,9 @@ namespace OnlineClassRegister.Controllers
         // GET: Students
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Student.ToListAsync());
+            var applicationDbContext = _context.Student.Include(s => s.studentClass);
+              return View(await applicationDbContext.ToListAsync());
+
         }
 
         // GET: Students/Details/5
@@ -34,6 +36,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var student = await _context.Student
+                .Include(s => s.studentClass)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (student == null)
             {
@@ -57,6 +60,7 @@ namespace OnlineClassRegister.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,name,surname,studentClassId")] Student student)
         {
+            Console.WriteLine(student);
             if (ModelState.IsValid)
             {
                 _context.Add(student);
@@ -80,6 +84,7 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
+            ViewData["studentClassId"] = new SelectList(_context.StudentClass, "id", "name");
 
             return View(student);
         }
@@ -89,7 +94,7 @@ namespace OnlineClassRegister.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name,surname")] Student student)
+        public async Task<IActionResult> Edit(int id, [Bind("id,name,surname,studentClassId")] Student student)
         {
             if (id != student.id)
             {
@@ -118,6 +123,8 @@ namespace OnlineClassRegister.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            ViewData["studentClassId"] = new SelectList(_context.StudentClass, "id", "name");
+
             return View(student);
         }
 
@@ -130,6 +137,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             var student = await _context.Student
+                .Include(s => s.studentClass)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (student == null)
             {

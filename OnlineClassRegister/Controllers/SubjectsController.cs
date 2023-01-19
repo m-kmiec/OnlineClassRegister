@@ -22,7 +22,10 @@ namespace OnlineClassRegister.Controllers
         // GET: Subjects
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Subject.ToListAsync());
+            var applicationDbContext = _context.Subject
+                .Include(s => s.classes)
+                .Include(s => s.teachers);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Subjects/Details/5
@@ -34,6 +37,8 @@ namespace OnlineClassRegister.Controllers
             }
 
             var subject = await _context.Subject
+                .Include(s => s.classes)
+                .Include(s => s.teachers)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (subject == null)
             {
@@ -46,6 +51,8 @@ namespace OnlineClassRegister.Controllers
         // GET: Subjects/Create
         public IActionResult Create()
         {
+            ViewData["classes"] = new SelectList(_context.StudentClass, "id", "name");
+            ViewData["teachers"] = new SelectList(_context.Teacher, "id", "surname");
             return View();
         }
 
@@ -54,11 +61,24 @@ namespace OnlineClassRegister.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name")] Subject subject)
+        public async Task<IActionResult> Create(Subject subject, List<int> cIds, List<int> tIds)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(subject);
+                _context.Subject.Add(subject);
+                _context.SaveChanges();
+
+                foreach(var classId in cIds)
+                {
+                    var Class = _context.StudentClass.Find(classId);
+                    Class.subjects.Add(subject);
+                }
+
+                foreach (var teacherId in tIds)
+                {
+                    var teacher = _context.Teacher.Find(teacherId);
+                    teacher.subjects.Add(subject);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -78,6 +98,8 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
+            ViewData["classes"] = new SelectList(_context.StudentClass, "id", "name");
+            ViewData["teachers"] = new SelectList(_context.Teacher, "id", "surname");
             return View(subject);
         }
 
@@ -113,6 +135,8 @@ namespace OnlineClassRegister.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["classes"] = new SelectList(_context.StudentClass, "id", "name");
+            ViewData["teachers"] = new SelectList(_context.Teacher, "id", "surname");
             return View(subject);
         }
 
@@ -125,6 +149,8 @@ namespace OnlineClassRegister.Controllers
             }
 
             var subject = await _context.Subject
+                .Include(s => s.classes)
+                .Include(s => s.teachers)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (subject == null)
             {
