@@ -9,7 +9,7 @@ namespace OnlineClassRegister.Models
 
         [Key]
         public int id { get; set; }
-        [DisplayName("Name")]
+        [DisplayName("Class Name")]
         public string name { get; set; }
         [DisplayName("Class tutor")]
         public virtual Teacher? classTutor { get; set; }
