@@ -1,5 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
+
 #nullable disable
 
 using System;
@@ -56,6 +57,22 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [DataType(DataType.Text)]
+            [Display(Name = "Name")]
+            public string FirstName { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Surname")]
+            public string LastName { get; set; }
+
+            [Display(Name = "Birth Date")]
+            [DataType(DataType.Date)]
+            public DateTime DOB { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "City of birth")]
+            public string CityOfBirth { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -70,6 +87,10 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DOB = user.DateOfBirth,
+                CityOfBirth = user.CityOfBirth,
                 PhoneNumber = phoneNumber
             };
         }
@@ -111,6 +132,27 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            if (Input.FirstName != user.FirstName)
+            {
+                user.FirstName = Input.FirstName;
+            }
+
+            if (Input.LastName != user.LastName)
+            {
+                user.LastName = Input.LastName;
+            }
+
+            if (Input.DOB != user.DateOfBirth)
+            {
+                user.DateOfBirth = Input.DOB;
+            }
+            
+            if (Input.CityOfBirth != user.CityOfBirth)
+            {
+                user.CityOfBirth = Input.CityOfBirth;
+            }
+
+            await _userManager.UpdateAsync(user);
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();

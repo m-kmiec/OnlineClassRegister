@@ -11,32 +11,35 @@
 </p>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.classes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.teachers)
-            </th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.classes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.teachers)
+        </th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.name)
             </td>
             <td>
-                @foreach(var sc in item.classes){
+                @foreach (var sc in item.classes)
+                {
                     sc.name += " ";
                     @Html.DisplayFor(name => sc.name)
                 }
             </td>
             <td>
-                @foreach(var t in item.teachers){
+                @foreach (var t in item.teachers)
+                {
                     t.surname += " ";
                     @Html.DisplayFor(surname => t.surname)
                 }
@@ -47,6 +50,6 @@
                 <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>

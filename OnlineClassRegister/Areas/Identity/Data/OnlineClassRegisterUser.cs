@@ -14,5 +14,10 @@ public class OnlineClassRegisterUser : IdentityUser
 
     [PersonalData]
     public string? LastName { get; set; }
+
+    [PersonalData] 
+    public DateTime DateOfBirth { get; set; }
+    [PersonalData] 
+    public string? CityOfBirth { get; set; }
 }
 
