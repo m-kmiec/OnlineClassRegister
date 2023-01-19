@@ -13,6 +13,9 @@ namespace OnlineClassRegister.Models
         [DisplayName("Surrname")]
         public string surname { get; set; }
 
-        public StudentClass studentClass;
+        [ForeignKey("StudentClass")]
+        public int studentClassId { get; set; }
+        [DisplayName("Class")]
+        public StudentClass? studentClass {get;set;}
     }
 }

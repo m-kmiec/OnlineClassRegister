@@ -23,6 +23,11 @@
                 <span asp-validation-for="surname" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="studentClassId" class="control-label">Class</label>
+                <select asp-for="studentClassId" class="form-control" asp-items="ViewBag.studentClassId"></select>
+                <span asp-validation-for="studentClassId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
