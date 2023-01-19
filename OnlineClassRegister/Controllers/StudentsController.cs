@@ -46,6 +46,7 @@ namespace OnlineClassRegister.Controllers
         // GET: Students/Create
         public IActionResult Create()
         {
+            ViewData["studentClassId"] = new SelectList(_context.StudentClass, "id", "name");
             return View();
         }
 
@@ -54,7 +55,7 @@ namespace OnlineClassRegister.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,surname")] Student student)
+        public async Task<IActionResult> Create([Bind("id,name,surname,studentClassId")] Student student)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +63,7 @@ namespace OnlineClassRegister.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(student);
         }
 

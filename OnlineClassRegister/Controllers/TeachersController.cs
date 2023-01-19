@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace OnlineClassRegister.Controllers
             _context = context;
         }
 
+        [Authorize(Policy = "RequireTeacher")]
         // GET: Teachers
         public async Task<IActionResult> Index()
         {
@@ -64,7 +66,6 @@ namespace OnlineClassRegister.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
             return View(teacher);
         }
 
