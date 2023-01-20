@@ -34,6 +34,7 @@ namespace OnlineClassRegister.Models
                 Email = "admin@gmail.com",
                 NormalizedEmail = "ADMIN@GMAIL.COM",
                 UserName = "admin",
+                DateOfBirth = DateTime.Now,
                 NormalizedUserName = "ADMIN",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = false,

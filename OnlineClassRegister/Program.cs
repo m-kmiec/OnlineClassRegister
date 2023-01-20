@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using OnlineClassRegister.Areas.Identity.Data;
 using OnlineClassRegister.Models;
+using OnlineClassRegister.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireStudent", policy => policy.RequireRole("Student"));
     options.AddPolicy("RequireParent", policy => policy.RequireRole("Parent"));
 });
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
 var app = builder.Build();
 

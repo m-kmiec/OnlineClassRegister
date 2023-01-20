@@ -12,14 +12,14 @@ using OnlineClassRegister.Areas.Identity.Data;
 namespace OnlineClassRegister.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230119123407_StudentModelChanges")]
-    partial class StudentModelChanges
+    [Migration("20230119183930_CustomUserData")]
+    partial class CustomUserData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "6.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -169,9 +169,15 @@ namespace OnlineClassRegister.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("CityOfBirth")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -242,22 +248,22 @@ namespace OnlineClassRegister.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Studentid")
+                    b.Property<int>("studentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Subjectid")
+                    b.Property<int>("subjectId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TeacherGradingid")
+                    b.Property<int>("teacherGradingId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Studentid");
+                    b.HasIndex("studentId");
 
-                    b.HasIndex("Subjectid");
+                    b.HasIndex("subjectId");
 
-                    b.HasIndex("TeacherGradingid");
+                    b.HasIndex("teacherGradingId");
 
                     b.ToTable("Grade", (string)null);
                 });
@@ -330,7 +336,7 @@ namespace OnlineClassRegister.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
 
-                    b.Property<int>("classTutoringId")
+                    b.Property<int?>("classTutoringId")
                         .HasColumnType("int");
 
                     b.Property<string>("name")
@@ -344,7 +350,8 @@ namespace OnlineClassRegister.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("classTutoringId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[classTutoringId] IS NOT NULL");
 
                     b.ToTable("Teacher", (string)null);
                 });
@@ -434,19 +441,19 @@ namespace OnlineClassRegister.Migrations
                 {
                     b.HasOne("OnlineClassRegister.Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("Studentid")
+                        .HasForeignKey("studentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("OnlineClassRegister.Models.Subject", "Subject")
                         .WithMany()
-                        .HasForeignKey("Subjectid")
+                        .HasForeignKey("subjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("OnlineClassRegister.Models.Teacher", "TeacherGrading")
                         .WithMany()
-                        .HasForeignKey("TeacherGradingid")
+                        .HasForeignKey("teacherGradingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -472,9 +479,7 @@ namespace OnlineClassRegister.Migrations
                 {
                     b.HasOne("OnlineClassRegister.Models.StudentClass", "classTutoring")
                         .WithOne("classTutor")
-                        .HasForeignKey("OnlineClassRegister.Models.Teacher", "classTutoringId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OnlineClassRegister.Models.Teacher", "classTutoringId");
 
                     b.Navigation("classTutoring");
                 });
