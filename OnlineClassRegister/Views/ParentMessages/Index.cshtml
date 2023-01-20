@@ -1,0 +1,48 @@
+﻿@model List<Message>
+@using OnlineClassRegister.Areas.Identity.Data
+@inject ApplicationDbContext _context
+<h2>Sent Messages</h2>
+<a asp-action="Create" class="btn btn-primary mb-3">Create New Message</a>
+<table class="table">
+    <thead>
+    <tr>
+        <th>To</th>
+        <th>Message</th>
+        <th>Sent at</th>
+        <th>Reply time</th>
+        <th>Reply</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var message in Model)
+    {
+        var receiver = _context.Users.FirstOrDefault(u => u.Id == message.ReceiverUserId);
+        <tr>
+            <td>@receiver.FirstName @receiver.LastName</td>
+            <td>@message.Text</td>
+            <td>@message.MessageSendTime</td>
+            <td>
+                @if (string.IsNullOrEmpty(message.Reply))
+                {
+                    <span>Waiting for reply</span>
+                }
+                else
+                {
+                    <span>Replied at @message.ReplyTime</span>
+                }
+            </td>
+            <td
+            >
+                @if (string.IsNullOrEmpty(message.Reply))
+                {
+                    <span>Waiting for reply</span>
+                }
+                else
+                {
+                    <span>@message.Reply</span>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

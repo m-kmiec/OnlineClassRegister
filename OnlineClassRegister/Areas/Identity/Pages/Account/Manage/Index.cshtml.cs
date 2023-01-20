@@ -32,6 +32,8 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public string Username { get; set; }
+        [Display(Name = "Roles")]
+        public string UserRoles { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -82,8 +84,10 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
 
             Username = userName;
+            UserRoles = string.Join(",", roles);
 
             Input = new InputModel
             {
@@ -91,7 +95,7 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
                 LastName = user.LastName,
                 DOB = user.DateOfBirth,
                 CityOfBirth = user.CityOfBirth,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
             };
         }
 
@@ -146,7 +150,7 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
             {
                 user.DateOfBirth = Input.DOB;
             }
-            
+
             if (Input.CityOfBirth != user.CityOfBirth)
             {
                 user.CityOfBirth = Input.CityOfBirth;

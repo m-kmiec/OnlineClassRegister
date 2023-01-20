@@ -23,6 +23,7 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
     public DbSet<Teacher> Teacher { get; set; }
 
     public DbSet<Grade> Grade { get; set; }
+    public DbSet<Message> Message { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -33,6 +34,7 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
         builder.Entity<StudentClass>().ToTable("StudentClass");
         builder.Entity<Subject>().ToTable("Subject");
         builder.Entity<Teacher>().ToTable("Teacher");
+        builder.Entity<Message>().ToTable("Message");
 
         builder.Entity<Subject>()
             .HasMany<Teacher>(s => s.teachers)
@@ -57,7 +59,6 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
             .HasOne(sc => sc.classTutor)
             .WithOne(t => t.classTutoring)
             .HasForeignKey<Teacher>(t => t.classTutoringId);
-
 
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }

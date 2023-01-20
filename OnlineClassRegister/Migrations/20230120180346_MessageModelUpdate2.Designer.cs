@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineClassRegister.Areas.Identity.Data;
 
@@ -11,9 +12,10 @@ using OnlineClassRegister.Areas.Identity.Data;
 namespace OnlineClassRegister.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230120180346_MessageModelUpdate2")]
+    partial class MessageModelUpdate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,9 +284,10 @@ namespace OnlineClassRegister.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reply")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ReplyTime")
+                    b.Property<DateTime>("ReplyTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SenderUserId")

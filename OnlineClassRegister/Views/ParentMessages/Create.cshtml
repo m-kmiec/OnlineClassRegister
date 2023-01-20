@@ -1,0 +1,13 @@
+﻿@model Message
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="ReceiverUserId">Select a teacher to send message to:</label>
+        <select asp-for="ReceiverUserId" class="form-control" asp-items="ViewBag.Users"></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="Text">Enter your message:</label>
+        <textarea asp-for="Text" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+</form>

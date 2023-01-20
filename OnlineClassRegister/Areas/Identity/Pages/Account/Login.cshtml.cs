@@ -114,7 +114,7 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
-
+                
                 if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt");
