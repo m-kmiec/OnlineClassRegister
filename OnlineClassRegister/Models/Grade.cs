@@ -6,7 +6,8 @@ namespace OnlineClassRegister.Models
     {
         [Key] 
         public int Id { get; set; }
-
+        public int value { get; set; }
+        public int semesterNumber { get; set; }
         public int teacherGradingId { get; set; }
         public virtual Teacher TeacherGrading { get; set; }
         public int studentId { get; set; }
