@@ -9,11 +9,11 @@ namespace OnlineClassRegister.Areas.Identity.Data;
 
 public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
 {
-
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
+
     public DbSet<Subject> Subject { get; set; }
 
     public DbSet<Student> Student { get; set; }
@@ -25,10 +25,13 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
     public DbSet<Grade> Grade { get; set; }
     public DbSet<Message> Message { get; set; }
 
+    public DbSet<Announcement> Announcements { get; set; }
+    public DbSet<AnnouncementReceiver> AnnouncementReceivers { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         builder.Entity<Student>().ToTable("Student");
         builder.Entity<Grade>().ToTable("Grade");
         builder.Entity<StudentClass>().ToTable("StudentClass");
@@ -59,6 +62,20 @@ public class ApplicationDbContext : IdentityDbContext<OnlineClassRegisterUser>
             .HasOne(sc => sc.classTutor)
             .WithOne(t => t.classTutoring)
             .HasForeignKey<Teacher>(t => t.classTutoringId);
+
+        builder.Entity<AnnouncementReceiver>()
+            .HasKey(ar => new { ar.AnnouncementId, ar.ReceiverId });
+
+        builder.Entity<AnnouncementReceiver>()
+            .HasOne(ar => ar.Announcement)
+            .WithMany(a => a.Receivers)
+            .HasForeignKey(ar => ar.AnnouncementId);
+
+        builder.Entity<AnnouncementReceiver>()
+            .HasOne(ar => ar.Receiver)
+            .WithMany()
+            .HasForeignKey(ar => ar.ReceiverId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }
