@@ -27,6 +27,10 @@
                 <select asp-for="classTutoringId" class ="form-control" asp-items="ViewBag.classTutoringId"></select>
             </div>         
             <div class="form-group">
+                <label class="control-label">Subjects</label>
+                <select name="sIds" class="form-control" asp-items="ViewBag.subjects" multiple></select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
