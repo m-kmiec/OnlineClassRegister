@@ -51,7 +51,7 @@ public class AnnouncementsController : Controller
 
         if (teacher.name == currentUser.FirstName && teacher.surname == currentUser.LastName)
         {
-            // throw some fancy error
+            return NotFound();
         }
 
         return View();

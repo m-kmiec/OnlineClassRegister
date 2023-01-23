@@ -79,6 +79,9 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
+
+            studentClass.students =  _context.Student.Where(s => s.studentClassId == studentClass.id).ToList();
+
             return View(studentClass);
         }
 
