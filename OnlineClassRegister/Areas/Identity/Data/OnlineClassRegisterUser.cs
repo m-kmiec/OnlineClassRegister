@@ -19,5 +19,7 @@ public class OnlineClassRegisterUser : IdentityUser
     public DateTime DateOfBirth { get; set; }
     [PersonalData] 
     public string? CityOfBirth { get; set; }
+
+    public int? StudentGroupId { get; set; }
 }
 

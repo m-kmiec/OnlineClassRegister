@@ -19,7 +19,7 @@ namespace OnlineClassRegister.Controllers
         {
             _context = context;
         }
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireTeacher")]
         // GET: StudentClasses
         public async Task<IActionResult> Index()
         {
@@ -79,6 +79,9 @@ namespace OnlineClassRegister.Controllers
             {
                 return NotFound();
             }
+
+            studentClass.students =  _context.Student.Where(s => s.studentClassId == studentClass.id).ToList();
+
             return View(studentClass);
         }
 

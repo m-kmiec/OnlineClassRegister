@@ -1,4 +1,5 @@
 ﻿@page
+@inject SignInManager<OnlineClassRegisterUser> SignInManager
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
@@ -15,21 +16,32 @@
                 <input asp-for="Username" class="form-control" disabled/>
                 <label asp-for="Username" class="form-label"></label>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.FirstName" class="form-label"></label>
+            <div class="form-floating">
+                <input asp-for="UserRoles" class="form-control" disabled/>
+                <label asp-for="UserRoles" class="form-label"></label>
+            </div>
+            <div class="form-floating">
                 <input asp-for="Input.FirstName" class="form-control"/>
+                <label asp-for="Input.FirstName" class="form-label"></label>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.LastName" class="form-label"></label>
+            <div class="form-floating">
                 <input asp-for="Input.LastName" class="form-control"/>
+                <label asp-for="Input.LastName" class="form-label"></label>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.DOB" class="form-label"></label>
+            @if (SignInManager.IsSignedIn(User) && User.IsInRole("Parent"))
+            {
+                <div class="form-floating">
+                    <select asp-for="StudentGroupId" class="form-control" asp-items="ViewBag.StudentGroupId"></select>
+                    <label asp-for="StudentGroupId" class="form-label"></label>
+                </div>
+            }
+            <div class="form-floating">
                 <input asp-for="Input.DOB" class="form-control"/>
+                <label asp-for="Input.DOB" class="form-label"></label>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.CityOfBirth" class="form-label"></label>
+            <div class="form-floating">
                 <input asp-for="Input.CityOfBirth" class="form-control"/>
+                <label asp-for="Input.DOB" class="form-label"></label>
             </div>
             <div class="form-floating">
                 <input asp-for="Input.PhoneNumber" class="form-control"/>

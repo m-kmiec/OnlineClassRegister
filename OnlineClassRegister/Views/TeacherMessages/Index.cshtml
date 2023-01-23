@@ -1,0 +1,46 @@
+﻿@using OnlineClassRegister.Areas.Identity.Data
+@model List<Message>
+@inject ApplicationDbContext _context
+<h2>Received Messages</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>From</th>
+        <th>Message</th>
+        <th>Sent at</th>
+        <th>Reply time</th>
+        <th>Reply</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var message in Model)
+    {
+        var sender = _context.Users.FirstOrDefault(u => u.Id == message.SenderUserId);
+        <tr>
+            <td>@sender.FirstName @sender.LastName</td>
+            <td>@message.Text</td>
+            <td>@message.MessageSendTime</td>
+            <td>
+                @if(string.IsNullOrEmpty(message.Reply))
+                {
+                    <a asp-action="Reply" asp-route-id="@message.Id">Reply</a>
+                }
+                else
+                {
+                    <span>Replied at @message.ReplyTime</span>
+                }
+            </td>
+            <td>
+                @if(string.IsNullOrEmpty(message.Reply))
+                {
+                   <span>You didn't reply to this message yet :(</span>
+                }
+                else
+                {
+                    <span>@message.Reply</span>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlineClassRegister.Areas.Identity.Data;
+using OnlineClassRegister.Models;
 
 namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
 {
@@ -18,11 +20,14 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<OnlineClassRegisterUser> _userManager;
         private readonly SignInManager<OnlineClassRegisterUser> _signInManager;
+        private readonly ApplicationDbContext _context;
 
         public IndexModel(
             UserManager<OnlineClassRegisterUser> userManager,
-            SignInManager<OnlineClassRegisterUser> signInManager)
+            SignInManager<OnlineClassRegisterUser> signInManager,
+            ApplicationDbContext context)
         {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -32,6 +37,11 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public string Username { get; set; }
+        [Display(Name = "Roles")]
+        public string UserRoles { get; set; }
+
+        [Display(Name="Student Group")]
+        public int StudentGroupId { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -82,21 +92,24 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
 
             Username = userName;
-
+            UserRoles = string.Join(",", roles);
+            
             Input = new InputModel
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 DOB = user.DateOfBirth,
                 CityOfBirth = user.CityOfBirth,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
             };
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
+            ViewData["StudentGroupId"] = new SelectList(_context.StudentClass, "id", "name");
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -107,7 +120,7 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([Bind("StudentGroupId")] int studentGroupId)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -132,6 +145,8 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            user.StudentGroupId = studentGroupId;
+
             if (Input.FirstName != user.FirstName)
             {
                 user.FirstName = Input.FirstName;
@@ -146,7 +161,7 @@ namespace OnlineClassRegister.Areas.Identity.Pages.Account.Manage
             {
                 user.DateOfBirth = Input.DOB;
             }
-            
+
             if (Input.CityOfBirth != user.CityOfBirth)
             {
                 user.CityOfBirth = Input.CityOfBirth;
