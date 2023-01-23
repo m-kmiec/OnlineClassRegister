@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineClassRegister.Models
 {
@@ -6,14 +7,17 @@ namespace OnlineClassRegister.Models
     {
         [Key] 
         public int Id { get; set; }
-
+        [DisplayName("Grade")]
+        public int value { get; set; }
+        [DisplayName("Semester number")]
+        public int semesterNumber { get; set; }
         public int teacherGradingId { get; set; }
-        public virtual Teacher TeacherGrading { get; set; }
+        public virtual Teacher? TeacherGrading { get; set; }
         public int studentId { get; set; }
 
-        public virtual Student Student { get; set; }
+        public virtual Student? Student { get; set; }
         public int subjectId { get; set; }
 
-        public virtual Subject Subject { get; set; }
+        public virtual Subject? Subject { get; set; }
     }
 }

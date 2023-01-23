@@ -1,0 +1,107 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Web
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style type="text/css">
+    .tg {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    .tg td {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        overflow: hidden;
+        padding: 10px 5px;
+        word-break: normal;
+    }
+
+    .tg th {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        overflow: hidden;
+        padding: 10px 5px;
+        word-break: normal;
+    }
+
+    .tg .tg-c3ow {
+        border-color: inherit;
+        text-align: center;
+        vertical-align: top
+    }
+
+    .tg .tg-0pky {
+        border-color: inherit;
+        text-align: left;
+        vertical-align: top
+    }
+    .gradeBox {
+        width: 25px;
+        height: 25px;
+        background-color: green;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        display: inline-block;
+        margin-right: 5px;
+    }
+</style>
+
+<form id="myForm" asp-action="IndexTeacher" method="post">
+    <select id="mySelect" name="SelectedOption">
+        @foreach (var item in ViewBag.Data)
+        {
+            <optgroup label="@item.Key.name">
+                @foreach (StudentClass c in item.Value)
+                {
+                    <option value="@c.name,@item.Key.name">@c.name</option>
+                }
+            </optgroup>
+        }
+    </select>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<p></p>
+<div id="tableContainer">
+    @Html.Raw(ViewBag.Table ?? "")
+</div>
+<button id="addGradeBttn" method="post" asp-action="ShowForm" class="btn btn-primary" style="display:none">Add grade</button>
+<div id="addGradeContainer">
+    @Html.Raw(ViewBag.GradeForm ?? "")
+</div>
+<script>
+    $(document).ready(function () {
+    $("#myForm").submit(function (event) {
+        event.preventDefault();
+        var selectedOption = $("#mySelect").val();
+        $.ajax({
+            type: "POST",
+                url: "/Register/IndexTeacher",
+            data: { SelectedOption: selectedOption },
+            success: function (data) {
+                $("#tableContainer").html(data);
+                $("#addGradeBttn").show();
+            }
+        });
+    });
+    $("#addGradeBttn").click(function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "/Register/ShowForm",
+            success: function (data) {
+                $("#addGradeContainer").html(data);
+            }
+        });
+    });
+});
+</script>

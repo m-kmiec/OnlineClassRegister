@@ -1,0 +1,146 @@
+﻿<style type="text/css">
+    .tg {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    .tg td {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        overflow: hidden;
+        padding: 10px 5px;
+        word-break: normal;
+    }
+
+    .tg th {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        overflow: hidden;
+        padding: 10px 5px;
+        word-break: normal;
+    }
+
+    .tg .tg-c3ow {
+        border-color: inherit;
+        text-align: center;
+        vertical-align: top
+    }
+
+    .tg .tg-0pky {
+        border-color: inherit;
+        text-align: left;
+        vertical-align: top
+    }
+
+    .gradeBox {
+        width: 25px;
+        height: 25px;
+        background-color: green;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        display: inline-block;
+        margin-right: 5px;
+    }
+</style>
+<h1>Register</h1>
+<table id="registerTable" class="tg">
+    <thead>
+    <tr>
+        <th class="tg-0pky" rowspan="2">Subject</th>
+        <th class="tg-0pky" colspan="2">Semester 1</th>
+        <th class="tg-0pky" colspan="2">Semester 2</th>
+        <th class="tg-c3ow" rowspan="2">Avg. year</th>
+    </tr>
+    <tr>
+        <th class="tg-0pky">Grades</th>
+        <th class="tg-0pky">Avg. I</th>
+        <th class="tg-0pky">Grades</th>
+        <th class="tg-0pky">Avg. II</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var s in ViewBag.subjectList)
+    {
+        <tr>
+            <td>@s.name</td>
+            <td>
+                @foreach (var grade in ViewBag.gradeList)
+                {
+                    if (grade.Subject.name == s.name && grade.semesterNumber == 1)
+                    {
+                        <div class="gradeBox">@grade.value</div>
+                    }
+                }
+            </td>
+            <td>
+                @{
+                    var mean = 0.0;
+                    var i = 0.0;
+                    @foreach (var grade in ViewBag.gradeList)
+                    {
+                        if (grade.Subject.name == s.name && grade.semesterNumber == 1)
+                        {
+                            i++;
+                            mean += grade.value;
+                        }
+                    }
+                    @string.Format("{0:0.00}",mean == 0.0 ? 0 : mean / i)
+                }
+            </td>
+            <td >
+                @foreach (var grade in ViewBag.gradeList)
+                {
+                    if (grade.Subject.name == s.name && grade.semesterNumber == 2)
+                    {
+                        <div class="gradeBox">@grade.value</div>
+                    }
+                }
+            </td>
+            <td>
+                @{
+                    mean = 0.0;
+                    i = 0.0;
+                    @foreach (var grade in ViewBag.gradeList)
+                    {
+                        if (grade.Subject.name == s.name && grade.semesterNumber == 1)
+                        {
+                            i++;
+                            mean += grade.value;
+                        }
+                    }
+                    @string.Format("{0:0.00}",mean == 0.0 ? 0 : mean / i)
+                }
+            </td>
+            <td>
+                @{
+                    mean = 0.0;
+                    i = 0.0;
+                    @foreach (var grade in ViewBag.gradeList)
+                    {
+                        if (grade.Subject.name == s.name)
+                        {
+                            i++;
+                            mean += grade.value;
+                        }
+                    }
+                    @string.Format("{0:0.00}",mean == 0.0 ? 0 : mean / i)
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<form>
+    <select asp-items="@ViewBag.subjectSelectList" name="SelectedSubject"></select>
+    <input type="submit" value="Check for attachments"/>
+</form>
+
