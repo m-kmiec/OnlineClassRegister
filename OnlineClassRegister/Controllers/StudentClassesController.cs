@@ -19,7 +19,7 @@ namespace OnlineClassRegister.Controllers
         {
             _context = context;
         }
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireTeacher")]
         // GET: StudentClasses
         public async Task<IActionResult> Index()
         {
