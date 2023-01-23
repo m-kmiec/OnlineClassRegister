@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging.Signing;
 using OnlineClassRegister.Areas.Identity.Data;
 using OnlineClassRegister.Models;
 
@@ -24,7 +25,7 @@ namespace OnlineClassRegister.Controllers
         // GET: Teachers
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Teacher.Include(t => t.classTutoring);
+            var applicationDbContext = _context.Teacher.Include(t => t.classTutoring).Include(t => t.subjects);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -51,16 +52,23 @@ namespace OnlineClassRegister.Controllers
         public IActionResult Create()
         {
             ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "name");
+            ViewData["subjects"] = new SelectList(_context.Subject, "id", "name");
             return View();
         }
 
         // POST: Teachers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,surname,classTutoringId")] Teacher teacher)
+        public async Task<IActionResult> Create([Bind("id,name,surname,classTutoringId")] Teacher teacher, List<string> sIds)
         {
             if (ModelState.IsValid)
             {
+                foreach (var subjectId in sIds)
+                {
+                    var subject = _context.Subject.Find(subjectId);
+                    teacher.subjects.Add(subject);
+                }
+
                 _context.Add(teacher);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -84,6 +92,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
+            ViewData["subjects"] = new SelectList(_context.Subject, "id", "name");
             return View(teacher);
         }
 
@@ -122,6 +131,7 @@ namespace OnlineClassRegister.Controllers
             }
 
             ViewData["classTutoringId"] = new SelectList(_context.StudentClass, "id", "id", teacher.classTutoringId);
+            ViewData["subjects"] = new SelectList(_context.Subject, "id", "name");
             return View(teacher);
         }
 
