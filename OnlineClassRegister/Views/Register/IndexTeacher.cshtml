@@ -24,7 +24,7 @@
     .tg th {
         border-color: black;
         border-style: solid;
-        border-width: 1px;
+        border-width: 2px;
         font-family: Arial, sans-serif;
         font-size: 14px;
         font-weight: normal;
@@ -36,13 +36,17 @@
     .tg .tg-c3ow {
         border-color: inherit;
         text-align: center;
-        vertical-align: top
+        vertical-align: middle;
     }
 
     .tg .tg-0pky {
         border-color: inherit;
-        text-align: left;
-        vertical-align: top
+        text-align: center;
+        vertical-align: middle;
+        border-color: #ffffff;
+        letter-spacing: 1px;
+        background-color: rgba(0, 0, 0, .1);
+        border-width: 4px;
     }
     .gradeBox {
         width: 25px;
@@ -74,10 +78,14 @@
 <div id="tableContainer">
     @Html.Raw(ViewBag.Table ?? "")
 </div>
-<button id="addGradeBttn" method="post" asp-action="ShowForm" class="btn btn-primary" style="display:none">Add grade</button>
+<button id="addGradeBttn" method="post" asp-action="ShowForm" class="btn btn-primary" style="display: none; margin-top: 10px;">Add grade</button>
 <div id="addGradeContainer">
     @Html.Raw(ViewBag.GradeForm ?? "")
 </div>
+<form id="addAttachmentsDiv" style="display:none" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" id="file" />
+    <input type="submit" value="Upload" />
+</form>
 <script>
     $(document).ready(function () {
     $("#myForm").submit(function (event) {
@@ -90,6 +98,7 @@
             success: function (data) {
                 $("#tableContainer").html(data);
                 $("#addGradeBttn").show();
+                $("#addAttachmentsDiv").show();
             }
         });
     });

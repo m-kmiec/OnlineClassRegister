@@ -17,7 +17,7 @@ namespace OnlineClassRegister.Controllers
 
         private Dictionary<Student, List<Grade>> studentWithGrades { get; set; }
 
-        private static String[] classSubject { get; set; }
+        private static string[] classSubject { get; set; }
 
         private static Teacher loggedTeacher { get; set; }
 
@@ -37,6 +37,11 @@ namespace OnlineClassRegister.Controllers
             Student loggedStudent = _context.Student
                 .Where(s => s.name == user.FirstName && s.surname == user.LastName)
                 .FirstOrDefault();
+            string className = _context.StudentClass
+                .Where(sc=>sc.id == loggedStudent.studentClassId)
+                .First().name;
+            classSubject = new string[2];
+            classSubject[0] = className;
             ViewBag.subjectList = _context.Subject
                 .Include(s => s.classes)
                 .ThenInclude(c => c.students)
@@ -45,7 +50,7 @@ namespace OnlineClassRegister.Controllers
             ViewBag.gradeList = _context.Grade
                 .Where(g => g.studentId == loggedStudent.id)
                 .ToList();
-            ViewData["subjectSelectList"] = new SelectList(ViewBag.subjectList, "id", "name");
+            ViewData["subjectSelectList"] = new SelectList(ViewBag.subjectList, "name", "name");
             return View();
         }
 
@@ -103,7 +108,7 @@ namespace OnlineClassRegister.Controllers
         {
             var htmlRaw = new StringBuilder();
             double numberOfGrades,mean,numberOfAllGrades=0,totalMean=0;
-            htmlRaw.Append("<table id=\"tableHidden\" class=\"tg\">\r\n    <thead>\r\n        <tr>\r\n            <th class=\"tg-0pky\" rowspan=\"2\">Student</th>\r\n            <th class=\"tg-0pky\" colspan=\"2\">Semester 1</th>\r\n            <th class=\"tg-0pky\" colspan=\"2\">Semester 2</th>\r\n            <th class=\"tg-c3ow\" rowspan=\"2\">Avg. Year</th>\r\n        </tr>\r\n        <tr>\r\n            <th class=\"tg-0pky\">Grades</th>\r\n            <th class=\"tg-0pky\">Avg. I</th>\r\n            <th class=\"tg-0pky\">Grades</th>\r\n            <th class=\"tg-0pky\">Avg. II</th>\r\n        </tr>\r\n    </thead>\r\n    <tbody>");
+            htmlRaw.Append("<table id=\"tableHidden\" class=\"tg\">\r\n    <thead>\r\n        <tr>\r\n            <th class=\"tg-0pky\" rowspan=\"2\">Student</th>\r\n            <th class=\"tg-0pky\" colspan=\"2\">Semester 1</th>\r\n            <th class=\"tg-0pky\" colspan=\"2\">Semester 2</th>\r\n            <th class=\"tg-0pky\" rowspan=\"2\">Avg. Year</th>\r\n        </tr>\r\n        <tr>\r\n            <th class=\"tg-0pky\">Grades</th>\r\n            <th class=\"tg-0pky\">Avg. I</th>\r\n            <th class=\"tg-0pky\">Grades</th>\r\n            <th class=\"tg-0pky\">Avg. II</th>\r\n        </tr>\r\n    </thead>\r\n    <tbody>");
             foreach (var item in studentWithGrades)
             {
                 htmlRaw.Append("<tr>");
@@ -191,6 +196,59 @@ namespace OnlineClassRegister.Controllers
             }
 
             return View(grade);
+        }
+        
+        [HttpPost]
+        public IActionResult UploadFile(IFormFile file)
+        {
+            if (file != null)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "App_Data/uploads", classSubject[0] + "," + classSubject[1] + "," +fileName);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+            }
+            return RedirectToAction("IndexTeacher");
+        }
+
+        [HttpPost]
+        public IActionResult ShowAvailableFiles(string SelectedOption)
+        {
+            classSubject[1] = SelectedOption;
+            var filesPaths = Directory.GetFiles(Path.Combine(Directory.GetCurrentDirectory(), "App_Data/uploads/"));
+            List<string> finalFileList = new List<string>();
+            foreach (var file in filesPaths)
+            {
+                string fileName = Path.GetFileName(file);
+                if (fileName.Contains(classSubject[1]) && fileName.Contains(classSubject[0]))
+                {
+                    int lastCommaIndex = fileName.LastIndexOf(",");
+                    finalFileList.Add(fileName.Substring(lastCommaIndex + 1));
+                }
+            }
+            ViewBag.files = finalFileList;
+            return PartialView("FileTable");
+        }
+
+        [HttpGet]
+        public IActionResult FileTable()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Download(string fileName)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "App_Data/uploads/" + classSubject[0] + "," + classSubject[1] +"," + fileName);
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                stream.CopyTo(memory);
+            }
+            memory.Position = 0;
+            return File(memory, "application/octet-stream", fileName);
         }
     }
 }

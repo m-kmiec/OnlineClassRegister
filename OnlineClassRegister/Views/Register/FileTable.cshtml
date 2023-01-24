@@ -1,0 +1,19 @@
+﻿<table>
+    <thead>
+        <tr>
+            <th>File Name</th>
+            <th>Download</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var file in ViewBag.files)
+        {
+                <tr>
+                    <td>@file</td>
+                    <td>
+                        <a asp-action="Download" asp-route-fileName="@file">Download</a>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
