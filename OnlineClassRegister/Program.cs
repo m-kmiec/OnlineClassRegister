@@ -1,3 +1,4 @@
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,10 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
+builder.Services.AddHangfire(config =>
+    config.UseSqlServerStorage(connectionString));
+builder.Services.AddHangfireServer();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -54,7 +59,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseAuthentication();
-;
 
 app.UseAuthorization();
 
@@ -63,5 +67,9 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+app.UseHangfireDashboard();
+
+RecurringJob.AddOrUpdate<EmailSender>(x => x.SendPeriodicEmail(), Cron.Hourly);
 
 app.Run();
