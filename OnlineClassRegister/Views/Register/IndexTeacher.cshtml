@@ -58,8 +58,15 @@
         display: inline-block;
         margin-right: 5px;
     }
+    .left-div {
+        float: left;
+    }
+    .right-div {
+        float: right;
+    }
 </style>
 
+<h1>Choose class and subject: </h1>
 <form id="myForm" asp-action="IndexTeacher" method="post">
     <select id="mySelect" name="SelectedOption">
         @foreach (var item in ViewBag.Data)
@@ -78,14 +85,26 @@
 <div id="tableContainer">
     @Html.Raw(ViewBag.Table ?? "")
 </div>
-<button id="addGradeBttn" method="post" asp-action="ShowForm" class="btn btn-primary" style="display: none; margin-top: 10px;">Add grade</button>
-<div id="addGradeContainer">
-    @Html.Raw(ViewBag.GradeForm ?? "")
+<div class="buttonContainer">
+    <div>
+        <form id="addAttachmentsDiv" style="display:none" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" />
+            <input type="submit" value="Upload" />
+        </form>
+    </div>
+    <div class="left-div">
+        <button id="teachingMaterialBttn" method="post" asp-action="ShowTeachingMaterial" style="display: none">Show teaching material</button>
+    </div>
+    <div class="right-div">
+        <button id="addGradeBttn" method="post" asp-action="ShowForm" class="btn btn-primary" style="display: none; margin-top: 10px;">Add grade</button>
+    </div>
+
 </div>
-<form id="addAttachmentsDiv" style="display:none" asp-action="UploadFile" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" id="file" />
-    <input type="submit" value="Upload" />
-</form>
+<p></p>
+<div id="teachingMaterialcontainter" style="margin-top:50px"></div>
+<div id="addGradeContainer" style="margin-top:50px"></div>
+
+
 <script>
     $(document).ready(function () {
     $("#myForm").submit(function (event) {
@@ -99,6 +118,7 @@
                 $("#tableContainer").html(data);
                 $("#addGradeBttn").show();
                 $("#addAttachmentsDiv").show();
+                $("#teachingMaterialBttn").show();
             }
         });
     });
@@ -109,6 +129,16 @@
             url: "/Register/ShowForm",
             success: function (data) {
                 $("#addGradeContainer").html(data);
+            }
+        });
+    });
+    $("#teachingMaterialBttn").click(function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "/Register/ShowTeachingMaterial",
+            success: function (data) {
+                $("#teachingMaterialcontainter").html(data);
             }
         });
     });
