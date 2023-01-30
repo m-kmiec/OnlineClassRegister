@@ -6,44 +6,54 @@
         width: 100%;
     }
 
-        .tg td {
-            border-color: black;
-            border-style: solid;
-            border-width: 1px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            overflow: hidden;
-            padding: 10px 5px;
-            word-break: normal;
-        }
+    .tg td {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        overflow: hidden;
+        padding: 10px 5px;
+        word-break: normal;
+    }
 
-        .tg th {
-            border-color: black;
-            border-style: solid;
-            border-width: 2px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            font-weight: normal;
-            overflow: hidden;
-            padding: 10px 5px;
-            word-break: normal;
-        }
+    .tg th {
+        border-color: black;
+        border-style: solid;
+        border-width: 2px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        overflow: hidden;
+        padding: 10px 5px;
+        word-break: normal;
+    }
 
-        .tg .tg-c3ow {
-            border-color: inherit;
-            text-align: center;
-            vertical-align: middle;
-        }
+    .tg .tg-c3ow {
+        border-color: inherit;
+        text-align: center;
+        vertical-align: middle;
+    }
 
-        .tg .tg-0pky {
-            border-color: inherit;
-            text-align: center;
-            vertical-align: middle;
-            border-color: #ffffff;
-            letter-spacing: 1px;
-            background-color: rgba(0, 0, 0, .1);
-            border-width: 4px;
-        }
+    .tg .tg-0pky {
+        border-color: inherit;
+        text-align: center;
+        vertical-align: middle;
+        border-color: #ffffff;
+        letter-spacing: 1px;
+        background-color: rgba(0, 0, 0, .1);
+        border-width: 4px;
+    }
+    .gradeBox {
+        width: 25px;
+        height: 25px;
+        background-color: green;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        display: inline-block;
+        margin-right: 5px;
+    }
 
     .gradeBox {
         width: 25px;
@@ -76,8 +86,8 @@
     @foreach (var s in ViewBag.subjectList)
     {
         <tr>
-            <td>@s.name</td>
-            <td>
+            <td class="tg-0pky">@s.name</td>
+            <td class="tg-0pky">
                 @foreach (var grade in ViewBag.gradeList)
                 {
                     if (grade.Subject.name == s.name && grade.semesterNumber == 1)
@@ -86,7 +96,7 @@
                     }
                 }
             </td>
-            <td>
+            <td class="tg-0pky">
                 @{
                     var mean = 0.0;
                     var i = 0.0;
@@ -101,7 +111,7 @@
                         @string.Format("{0:0.00}",mean == 0.0 ? 0 : mean / i)
                 }
             </td>
-            <td >
+            <td class="tg-0pky">
                 @foreach (var grade in ViewBag.gradeList)
                 {
                     if (grade.Subject.name == s.name && grade.semesterNumber == 2)
@@ -110,7 +120,7 @@
                     }
                 }
             </td>
-            <td>
+            <td class="tg-0pky">
                 @{
                     mean = 0.0;
                     i = 0.0;
@@ -125,7 +135,7 @@
                         @string.Format("{0:0.00}",mean == 0.0 ? 0 : mean / i)
                 }
             </td>
-            <td>
+            <td class="tg-0pky">
                 @{
                     mean = 0.0;
                     i = 0.0;
@@ -148,9 +158,13 @@
     <select id="mySelect" asp-items="@ViewBag.subjectSelectList" name="SelectedOption"></select>
     <input id="attachmentsButton" type="submit" value="Check for attachments"/>
 </form>
-<div id="attachmentsContainer">
+<form id="materialForm" asp-action="ShowTeachingMaterialStudent" method="post">
+    <select id="subjectSelect" asp-items="@ViewBag.subjectSelectList" name="SelectedOption"></select>
+    <input type="submit" value="Show teaching material" />
+</form>
+<div id="attachmentsContainer"></div>
+<div id="teachingMaterialContainter"></div>
 
-</div>
 
 <script>
     $(document).ready(function () {
@@ -163,6 +177,18 @@
                 data: { SelectedOption: selectedOption },
                 success: function (data) {
                     $("#attachmentsContainer").html(data);
+                }
+            });
+        });
+        $("#materialForm").submit(function (event) {
+            event.preventDefault();
+            var selected = $("#subjectSelect").val();
+            $.ajax({
+                type: "POST",
+                url: "/Register/ShowTeachingMaterialStudent",
+                data: { SelectedOption: selected },
+                success: function (data) {
+                    $("#teachingMaterialContainter").html(data);
                 }
             });
         });

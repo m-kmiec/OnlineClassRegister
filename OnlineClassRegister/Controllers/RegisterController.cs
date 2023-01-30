@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OnlineClassRegister.Areas.Identity.Data;
 using OnlineClassRegister.Models;
+using OnlineClassRegister.Services;
 
 namespace OnlineClassRegister.Controllers
 {
@@ -15,6 +16,8 @@ namespace OnlineClassRegister.Controllers
 
         private readonly UserManager<OnlineClassRegisterUser> _userManager;
 
+        private readonly FileService _fileService;
+
         private Dictionary<Student, List<Grade>> studentWithGrades { get; set; }
 
         private static string[] classSubject { get; set; }
@@ -23,11 +26,12 @@ namespace OnlineClassRegister.Controllers
 
         private static List<Student> Students { get; set; }
 
-        public RegisterController(ApplicationDbContext context, UserManager<OnlineClassRegisterUser> userManager)
+        public RegisterController(ApplicationDbContext context, UserManager<OnlineClassRegisterUser> userManager, FileService fileService)
         {
             _context = context;
             _userManager = userManager;
             studentWithGrades = new Dictionary<Student, List<Grade>>();
+            _fileService = fileService;
         }
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
@@ -172,11 +176,6 @@ namespace OnlineClassRegister.Controllers
             return PartialView("AddGrade");
         }
 
-        [HttpGet]
-        public IActionResult AddGrade()
-        {
-            return View("AddGrade");
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -232,11 +231,6 @@ namespace OnlineClassRegister.Controllers
             return PartialView("FileTable");
         }
 
-        [HttpGet]
-        public IActionResult FileTable()
-        {
-            return View();
-        }
 
         [HttpGet]
         public IActionResult Download(string fileName)
@@ -249,6 +243,30 @@ namespace OnlineClassRegister.Controllers
             }
             memory.Position = 0;
             return File(memory, "application/octet-stream", fileName);
+        }
+
+        [HttpPost]
+        public IActionResult ShowTeachingMaterial()
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "App_Data/teachingMaterial/" +classSubject[1] + ".txt");
+            ViewBag.materials = _fileService.ReadMaterialList(path);
+            return PartialView("TeachingMaterials");
+        }
+
+        [HttpPost]
+        public IActionResult ShowTeachingMaterialStudent(string SelectedOption)
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "App_Data/teachingMaterial/" + SelectedOption + ".txt");
+            ViewBag.materials = _fileService.ReadMaterialList(path);
+            return PartialView("TeachingMaterials");
+        }
+
+        [HttpPost]
+        public IActionResult AddMaterial(string newMaterial)
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "App_data/teachingMaterial/" + classSubject[1] + ".txt");
+            _fileService.AppendToFile(path,newMaterial);
+            return RedirectToAction("IndexTeacher");
         }
     }
 }

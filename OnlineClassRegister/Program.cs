@@ -30,6 +30,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireParent", policy => policy.RequireRole("Parent"));
 });
 
+builder.Services.AddTransient<FileService>();
+
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 

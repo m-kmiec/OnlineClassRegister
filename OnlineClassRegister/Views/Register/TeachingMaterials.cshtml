@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using OnlineClassRegister.Areas.Identity.Data
+<p></p><p></p><p></p><p></p>
+@inject SignInManager<OnlineClassRegisterUser> SignInManager
+<style>
+    .material-div {
+        border-radius: 10px;
+        border: 1px solid black; 
+        margin: 5px;
+        padding: 5px;
+    }
+</style>
+<div>
+    Teaching materials:
+    @foreach (var i in ViewBag.materials)
+    {
+        if (!string.IsNullOrEmpty(i))
+        {
+            <div class="material-div">@i</div>
+        }
+    }
+
+    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Teacher"))
+    {
+        <form asp-action="AddMaterial" method="post">
+            <label>Add new material</label>
+            <input type="text" name="newMaterial"/>
+            <button type="submit">Add</button>
+        </form>
+    }
+</div>
