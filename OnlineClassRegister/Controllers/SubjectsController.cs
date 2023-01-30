@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,7 @@ namespace OnlineClassRegister.Controllers
 
             return View(subject);
         }
-
+        [Authorize(Policy = "RequireTeacher")]
         // GET: Subjects/Create
         public IActionResult Create()
         {
@@ -84,7 +85,7 @@ namespace OnlineClassRegister.Controllers
             }
             return View(subject);
         }
-
+        [Authorize(Policy = "RequireTeacher")]
         // GET: Subjects/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -139,7 +140,7 @@ namespace OnlineClassRegister.Controllers
             ViewData["teachers"] = new SelectList(_context.Teacher, "id", "surname");
             return View(subject);
         }
-
+        [Authorize(Policy = "RequireTeacher")]
         // GET: Subjects/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
