@@ -49,10 +49,10 @@ public class AnnouncementsController : Controller
         var currentUser = await _userManager.GetUserAsync(User);
         var teacher = _context.Teacher.FirstOrDefault(t => t.classTutoringId != null);
 
-        if (teacher.name == currentUser.FirstName && teacher.surname == currentUser.LastName)
-        {
-            return NotFound();
-        }
+        // if (teacher.name == currentUser.FirstName && teacher.surname == currentUser.LastName)
+        // {
+        //     return NotFound();
+        // }
 
         return View();
     }
